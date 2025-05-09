@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "6797267439",
+    "project_id": "offline-first-notes-keeper",
+    "storage_bucket": "offline-first-notes-keeper.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:6797267439:android:dc3b28213e8286e93e261a",
+        "android_client_info": {
+          "package_name": "com.example.kayko_challenge"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZAAkyv2Gq7Einck21w_o4orKgg1WiqM4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
