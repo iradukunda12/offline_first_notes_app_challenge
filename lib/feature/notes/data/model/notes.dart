@@ -1,5 +1,7 @@
 import 'package:hive_ce/hive.dart';
 
+enum SyncStatus { synced, pending, failed }
+
 @HiveType(typeId: 0)
 class NoteModel extends HiveObject {
   @HiveField(0)
@@ -12,18 +14,17 @@ class NoteModel extends HiveObject {
   final String description;
 
   @HiveField(3)
-  final String? imagePath; 
+  final String? imagePath;
 
   @HiveField(4)
-  final bool
-      isSynced; 
+  final SyncStatus syncStatus;
 
   NoteModel({
     required this.id,
     required this.title,
     required this.description,
     this.imagePath,
-    this.isSynced = false,
+    this.syncStatus = SyncStatus.pending,
   });
 
   // For Firebase sync
@@ -33,6 +34,7 @@ class NoteModel extends HiveObject {
       'title': title,
       'description': description,
       'imagePath': imagePath,
+      'syncStatus': syncStatus.name,
     };
   }
 
@@ -42,7 +44,25 @@ class NoteModel extends HiveObject {
       title: map['title'],
       description: map['description'],
       imagePath: map['imagePath'],
-      isSynced: true,
+      syncStatus: SyncStatus.values.firstWhere(
+        (e) => e.name == map['syncStatus'],
+        orElse: () => SyncStatus.synced,
+      ),
+    );
+  }
+  NoteModel copyWith({
+    String? id,
+    String? title,
+    String? description,
+    String? imagePath,
+    SyncStatus? syncStatus,
+  }) {
+    return NoteModel(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      imagePath: imagePath ?? this.imagePath,
+      syncStatus: syncStatus ?? this.syncStatus,
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:kayko_challenge/feature/notes/presentation/screens/notes.dart';
 import 'package:kayko_challenge/firebase_options.dart';
 
 void main() async {
@@ -22,16 +23,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         textTheme: GoogleFonts.nunitoTextTheme(),
       ),
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello, Kayko Challenge!',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w100,
-                color: Colors.black,
-              )),
-        ),
-      ),
+      home: HomeScreen(),
     );
   }
 }
