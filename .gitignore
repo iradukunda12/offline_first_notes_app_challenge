@@ -97,5 +97,5 @@ linux/runner/Debug/
 .DS_Store
 *.log
 *.iml
-
+lib/firebase_options.dart
 
