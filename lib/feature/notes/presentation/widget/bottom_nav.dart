@@ -1,18 +1,65 @@
-import 'package:flutter/material.dart';
+import 'dart:io';
 
-class CustomBottomNav extends StatelessWidget {
-  const CustomBottomNav({super.key});
+import 'package:flutter/material.dart';
+import 'package:kayko_challenge/core/utils/image_helper.dart';
+
+class CustomBottomNav extends StatefulWidget {
+  final void Function({
+    required String title,
+    required String description,
+    String? imagePath,
+  }) onSave;
+  final String? initialTitle;
+  final String? initialDescription;
+  final String? initialImagePath;
+  const CustomBottomNav({super.key, required this.onSave, this.initialImagePath, this.initialTitle, this.initialDescription});
+
+  @override
+  State<CustomBottomNav> createState() => _CustomBottomNavState();
+}
+
+class _CustomBottomNavState extends State<CustomBottomNav> {
+  final textController = TextEditingController();
+  final descriptionController = TextEditingController();
+
+  File? selectedImage;
+ @override
+  void initState() {
+    super.initState();
+
+    if (widget.initialImagePath != null) {
+      final file = File(widget.initialImagePath!);
+      if (file.existsSync()) {
+        selectedImage = file;
+      }
+    }
+
+    textController.text = widget.initialTitle ?? '';
+    descriptionController.text = widget.initialDescription ?? '';
+  }
+
+
+  Future<void> pickImage() async {
+    final pickedImage = await ImageHelper.pickImageFromGallery();
+    if (pickedImage != null) {
+      setState(() {
+        selectedImage = pickedImage;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final textController = TextEditingController();
-    final descriptionController = TextEditingController();
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 80.0, horizontal: 30.0),
+      padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 30.0),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Title Input
+          if (selectedImage != null)
+            CircleAvatar(
+              radius: 40,
+              backgroundImage: FileImage(selectedImage!),
+            ),
           TextField(
             controller: textController,
             decoration: const InputDecoration(
@@ -22,7 +69,7 @@ class CustomBottomNav extends StatelessWidget {
                 borderSide: BorderSide(color: Colors.black45),
               ),
               focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.black),
+                borderSide: BorderSide(color: Colors.black54),
               ),
             ),
           ),
@@ -39,20 +86,18 @@ class CustomBottomNav extends StatelessWidget {
                       borderSide: BorderSide(color: Colors.black45),
                     ),
                     focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.deepPurple),
+                      borderSide: BorderSide(color: Colors.black),
                     ),
                   ),
                 ),
               ),
               const SizedBox(width: 12),
               ElevatedButton.icon(
-                onPressed: () {
-                  // TODO: Add image picking logic
-                },
-                icon: const Icon(Icons.upload_file),
+                onPressed: pickImage,
+                icon: const Icon(Icons.upload_file, color: Colors.white),
                 label: const Text("Upload"),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.deepPurple,
+                  backgroundColor: Colors.black,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
@@ -65,15 +110,37 @@ class CustomBottomNav extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 50.0),
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                final title = textController.text.trim();
+                final description = descriptionController.text.trim();
+                final imagePath = selectedImage?.path;
+
+                if (title.isEmpty || description.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        content: Text("Title and description are required")),
+                  );
+                  return;
+                }
+
+                widget.onSave(
+                  title: title,
+                  description: description,
+                  imagePath: imagePath,
+                );
+
+                // Clear fields
+                textController.clear();
+                descriptionController.clear();
+                setState(() => selectedImage = null);
+              },
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 100,
-                ),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 100, vertical: 12),
                 backgroundColor: Colors.black,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),

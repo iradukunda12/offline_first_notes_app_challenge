@@ -27,6 +27,11 @@ class NoteModel extends HiveObject {
     this.syncStatus = SyncStatus.pending,
   });
 
+   @override
+  String toString() {
+    return 'NoteModel(id: $id, title: $title, description: $description, imagePath: $imagePath, syncStatus: $syncStatus)';
+  }
+
   // For Firebase sync
   Map<String, dynamic> toMap() {
     return {

@@ -30,7 +30,7 @@ class NoteRepositoryImpl implements NoteRepository {
 
   @override
   Future<void> updateNote(NoteModel note) async {
-    await note.save();
+    await noteBox.put(note.id, note);
 
     await firestore.collection('notes').doc(note.id).update(note.toMap());
   }
