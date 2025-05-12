@@ -1,4 +1,5 @@
 import 'package:hive_ce/hive.dart';
+import 'package:kayko_challenge/core/services/encryption.dart';
 
 enum SyncStatus { synced, pending, failed }
 
@@ -27,12 +28,11 @@ class NoteModel extends HiveObject {
     this.syncStatus = SyncStatus.pending,
   });
 
-   @override
+  @override
   String toString() {
     return 'NoteModel(id: $id, title: $title, description: $description, imagePath: $imagePath, syncStatus: $syncStatus)';
   }
 
-  // For Firebase sync
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -68,6 +68,32 @@ class NoteModel extends HiveObject {
       description: description ?? this.description,
       imagePath: imagePath ?? this.imagePath,
       syncStatus: syncStatus ?? this.syncStatus,
+    );
+  }
+
+  Map<String, dynamic> toEncryptedMap() {
+    return {
+      'id': id,
+      'title': EncryptionService.encryptText(title),
+      'description': EncryptionService.encryptText(description),
+      'imagePath':
+          imagePath != null ? EncryptionService.encryptText(imagePath!) : null,
+      'syncStatus': syncStatus.name,
+    };
+  }
+
+  static NoteModel fromEncryptedMap(Map<String, dynamic> map) {
+    return NoteModel(
+      id: map['id'],
+      title: EncryptionService.decryptText(map['title']),
+      description: EncryptionService.decryptText(map['description']),
+      imagePath: map['imagePath'] != null
+          ? EncryptionService.decryptText(map['imagePath'])
+          : null,
+      syncStatus: SyncStatus.values.firstWhere(
+        (e) => e.name == map['syncStatus'],
+        orElse: () => SyncStatus.synced,
+      ),
     );
   }
 }

@@ -13,7 +13,7 @@ class ConnectivityCubit extends Cubit<ConnectivityState> {
   final ConnectivityService _connectivityService;
   final Connectivity _connectivity = Connectivity();
   final FirestoreService _firestoreService;
-  final bool _isSyncing = false;
+  bool _isSyncing = false;
 
   ConnectivityCubit(this._connectivityService, this._firestoreService)
       : super(const ConnectivityState.initial()) {
@@ -46,7 +46,7 @@ class ConnectivityCubit extends Cubit<ConnectivityState> {
     emit(const ConnectivityState.online());
 
     if (!state.isOnline && !_isSyncing) {
-      // await _syncNotes();
+      await _syncNotes();
     }
   }
 
@@ -54,23 +54,23 @@ class ConnectivityCubit extends Cubit<ConnectivityState> {
     _connectivitySubscription.cancel();
   }
 
-  // Future<void> _syncNotes() async {
-  //   if (_isSyncing) return;
+  Future<void> _syncNotes() async {
+    if (_isSyncing) return;
 
-  //   _isSyncing = true;
-  //   try {
-  //     emit(const ConnectivityState.syncing());
-  //     await _firestoreService.syncOfflineNotes();
-  //     emit(const ConnectivityState.synced());
-  //   } catch (e) {
-  //     emit(ConnectivityState.error("Failed to sync notes: $e"));
-  //   } finally {
-  //     _isSyncing = false;
+    _isSyncing = true;
+    try {
+      emit(const ConnectivityState.syncing());
+      await _firestoreService.syncOfflineNotes();
+      emit(const ConnectivityState.synced());
+    } catch (e) {
+      emit(ConnectivityState.error("Failed to sync notes: $e"));
+    } finally {
+      _isSyncing = false;
 
-  //     final currentStatus = await _connectivity.checkConnectivity();
-  //     await _handleConnectivityChange(currentStatus);
-  //   }
-  // }
+      final currentStatus = await _connectivity.checkConnectivity();
+      await _handleConnectivityChange(currentStatus);
+    }
+  }
 
   @override
   Future<void> close() {

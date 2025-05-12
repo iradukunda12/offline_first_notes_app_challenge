@@ -22,36 +22,29 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // ✅ Get app document directory
   final Directory dir = await getApplicationDocumentsDirectory();
 
-  // ✅ Initialize Hive at this path
   Hive.init(dir.path);
 
-  // ✅ Register your adapter (you must define it or generate it)
   Hive.registerAdapter(NoteModelAdapter());
 
-  // ✅ Open the box
   final noteBox = await Hive.openBox<NoteModel>('notes');
 
   final noteRepository = NoteRepositoryImpl(noteBox);
   final connectivityService = ConnectivityService();
   final firestoreService = FirestoreService();
+  final connectivityCubit =
+      ConnectivityCubit(connectivityService, firestoreService);
+  connectivityCubit.startMonitoring();
 
   runApp(
     MultiBlocProvider(
       providers: [
-        BlocProvider<NoteBloc>(
-          create: (_) => NoteBloc(noteRepository,
-              ConnectivityCubit(connectivityService, firestoreService)),
+        BlocProvider<ConnectivityCubit>.value(
+          value: connectivityCubit,
         ),
-        BlocProvider<ConnectivityCubit>(
-          create: (_) {
-            final cubit =
-                ConnectivityCubit(connectivityService, firestoreService);
-            cubit.startMonitoring();
-            return cubit;
-          },
+        BlocProvider<NoteBloc>(
+          create: (_) => NoteBloc(noteRepository, connectivityCubit),
         ),
       ],
       child: MyApp(),

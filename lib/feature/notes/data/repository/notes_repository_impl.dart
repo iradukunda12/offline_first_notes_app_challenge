@@ -11,23 +11,22 @@ class NoteRepositoryImpl implements NoteRepository {
   NoteRepositoryImpl(this.noteBox);
 
   @override
-  Future<void> addNote(NoteModel note) async {
-    // Always save locally first
+  Future<NoteModel> addNote(NoteModel note) async {
     await noteBox.put(note.id, note);
 
-    // Only try to sync if note is pending
-    if (note.syncStatus == SyncStatus.pending) {
-      try {
-        await firestore.collection('notes').doc(note.id).set(note.toMap());
-        // Update local copy with synced status
-        await noteBox.put(
-            note.id, note.copyWith(syncStatus: SyncStatus.synced));
-      } catch (e) {
-        // Mark as failed but keep the note
-        await noteBox.put(
-            note.id, note.copyWith(syncStatus: SyncStatus.failed));
-        rethrow;
-      }
+    try {
+      await firestore
+          .collection('notes')
+          .doc(note.id)
+          .set(note.toEncryptedMap());
+      final syncedNote = note.copyWith(syncStatus: SyncStatus.synced);
+      await noteBox.put(note.id, syncedNote);
+      return syncedNote;
+    } catch (e) {
+      final failedNote = note.copyWith(syncStatus: SyncStatus.failed);
+      await noteBox.put(note.id, failedNote);
+      print('Failed to sync note: $e');
+      rethrow;
     }
   }
 
@@ -52,6 +51,11 @@ class NoteRepositoryImpl implements NoteRepository {
   }
 
   @override
+  Future<NoteModel?> getNoteById(String id) async {
+    return noteBox.get(id);
+  }
+
+  @override
   Future<List<NoteModel>> getNotes() async {
     return noteBox.values.toList();
   }
@@ -62,7 +66,10 @@ class NoteRepositoryImpl implements NoteRepository {
 
     if (note.syncStatus == SyncStatus.pending) {
       try {
-        await firestore.collection('notes').doc(note.id).update(note.toMap());
+        await firestore
+            .collection('notes')
+            .doc(note.id)
+            .set(note.toEncryptedMap(), SetOptions(merge: true));
         await noteBox.put(
             note.id, note.copyWith(syncStatus: SyncStatus.synced));
       } catch (e) {
@@ -88,7 +95,8 @@ class NoteRepositoryImpl implements NoteRepository {
           if (doc.exists) {
             await doc.reference.update(note.toMap());
           } else {
-            await doc.reference.set(note.toMap());
+            await doc.reference
+                .set(note.toEncryptedMap(), SetOptions(merge: true));
           }
           await noteBox.put(
               note.id, note.copyWith(syncStatus: SyncStatus.synced));

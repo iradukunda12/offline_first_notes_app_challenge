@@ -52,17 +52,18 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
         title: event.title,
         description: event.description,
         imagePath: event.imagePath,
-        syncStatus: connectivityCubit.state.isOnline
-            ? SyncStatus.synced
-            : SyncStatus.pending,
+       
+        syncStatus: SyncStatus.pending,
       );
 
       await repository.addNote(note);
 
-      if (!connectivityCubit.state.isOnline) {
-        emit(NoteSuccess("Note saved locally. Will sync when online"));
-      } else {
+      
+      final updatedNote = await repository.addNote(note);
+      if (updatedNote.syncStatus == SyncStatus.synced) {
         emit(NoteSuccess("Note saved and synced"));
+      } else {
+        emit(NoteSuccess("Note saved locally. Will sync when online"));
       }
 
       add(LoadNotesEvent());
