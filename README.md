@@ -1,4 +1,4 @@
-# offline_first_notes_app_challenge
+<img width="348" alt="synced when i get back online" src="https://github.com/user-attachments/assets/dd620282-38ae-4ac3-9f65-ffccfddf028e" /># offline_first_notes_app_challenge
 Build a simple notes app in Flutter that works seamlessly offline and syncs when the device goes back online.
 
 ## Getting Started
@@ -126,4 +126,22 @@ Map<String, dynamic> toEncryptedMap() {
 }
 ```
 ## Screenshoot
+
+### Adding note when am online
+<img width="348" alt="adding notes" src="https://github.com/user-attachments/assets/dc9f89c4-9c5e-4959-9915-99e49668bdb8" />
+
+### offline adding note and indicating the note pending until i get back to be synced to the cloud database
+
+<img width="348" alt="offline adding note and pending indicator" src="https://github.com/user-attachments/assets/e1647709-6b71-403d-adae-65749c6b756f" />
+
+### indicating if am online or offline
+
+<img width="348" alt="online" src="https://github.com/user-attachments/assets/d5cfa3e3-e132-46f8-9d7c-16daddec8f64" />
+
+### synced with cloud database when i get back online
+
+<img width="348" alt="synced when i get back online" src="https://github.com/user-attachments/assets/d276d2fb-5c88-417e-bd29-fa4bb0f679de" />
+
+
+
 
