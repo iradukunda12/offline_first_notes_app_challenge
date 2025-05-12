@@ -14,31 +14,40 @@ class AppBars extends StatelessWidget implements PreferredSizeWidget {
           backgroundColor: Colors.black,
           centerTitle: true,
           title: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
+              Text(
                 "Kayko Challenge",
                 style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
               ),
-              const SizedBox(height: 4),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Icon(
                     Icons.circle,
-                    color: state.color, // Dynamic color based on connectivity
+                    color: state.color,
                     size: 12,
                   ),
-                  const SizedBox(width: 6),
+                  SizedBox(width: 6),
                   Text(
-                    state.status, // Dynamic text based on connectivity status
-                    style: const TextStyle(color: Colors.white70, fontSize: 14),
+                    state.status,
+                    style: TextStyle(color: Colors.white70, fontSize: 14),
                   ),
+                  if (state.isSyncing)
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: SizedBox(
+                        width: 14,
+                        height: 14,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ],

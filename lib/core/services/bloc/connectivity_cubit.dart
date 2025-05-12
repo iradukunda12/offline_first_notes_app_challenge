@@ -13,42 +13,68 @@ class ConnectivityCubit extends Cubit<ConnectivityState> {
   final ConnectivityService _connectivityService;
   final Connectivity _connectivity = Connectivity();
   final FirestoreService _firestoreService;
+  final bool _isSyncing = false;
 
   ConnectivityCubit(this._connectivityService, this._firestoreService)
-      : super(const ConnectivityState.initial());
-
-  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
-
-  // Start monitoring the connectivity status
-  void startMonitoring() {
-    _connectivitySubscription = _connectivity.onConnectivityChanged.listen(
-            _monitorConnection as void Function(
-                List<ConnectivityResult> event)?)
-        as StreamSubscription<ConnectivityResult>;
+      : super(const ConnectivityState.initial()) {
+    startMonitoring();
   }
 
-  // Stop monitoring the connectivity status
+  late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
+
+  void startMonitoring() {
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen(
+      (List<ConnectivityResult> results) async {
+        await _handleConnectivityChange(results);
+      },
+      onError: (error) {
+        emit(ConnectivityState.error("Connection error: $error"));
+      },
+    );
+  }
+
+  Future<void> _handleConnectivityChange(
+      List<ConnectivityResult> results) async {
+    final isConnected = results.isNotEmpty &&
+        results.any((result) => result != ConnectivityResult.none);
+
+    if (!isConnected) {
+      emit(const ConnectivityState.offline());
+      return;
+    }
+
+    emit(const ConnectivityState.online());
+
+    if (!state.isOnline && !_isSyncing) {
+      // await _syncNotes();
+    }
+  }
+
   void stopMonitoring() {
     _connectivitySubscription.cancel();
   }
 
-  // Monitoring connectivity changes and updating state accordingly
-  void _monitorConnection(ConnectivityResult result) {
-    if (result == ConnectivityResult.none) {
-      emit(const ConnectivityState.offline());
-    } else {
-      emit(const ConnectivityState.online());
-      _syncNotes(); // sync on reconnect
-    }
-  }
+  // Future<void> _syncNotes() async {
+  //   if (_isSyncing) return;
 
-  // Sync notes when the device comes back online
-  Future<void> _syncNotes() async {
-    try {
-      await _firestoreService.syncOfflineNotes();
-      emit(const ConnectivityState.synced());
-    } catch (e) {
-      emit(ConnectivityState.error("Failed to sync notes"));
-    }
+  //   _isSyncing = true;
+  //   try {
+  //     emit(const ConnectivityState.syncing());
+  //     await _firestoreService.syncOfflineNotes();
+  //     emit(const ConnectivityState.synced());
+  //   } catch (e) {
+  //     emit(ConnectivityState.error("Failed to sync notes: $e"));
+  //   } finally {
+  //     _isSyncing = false;
+
+  //     final currentStatus = await _connectivity.checkConnectivity();
+  //     await _handleConnectivityChange(currentStatus);
+  //   }
+  // }
+
+  @override
+  Future<void> close() {
+    stopMonitoring();
+    return super.close();
   }
 }

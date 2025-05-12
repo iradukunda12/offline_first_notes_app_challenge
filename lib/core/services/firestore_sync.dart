@@ -6,7 +6,7 @@ class FirestoreService {
 
   // Sync offline notes with Firestore
   Future<void> syncOfflineNotes() async {
-    // Retrieve offline notes from your local storage (e.g., Hive)
+    // Retrieve offline notes from your local storage 
     final offlineNotes = await _getOfflineNotes();
 
     for (var note in offlineNotes) {
@@ -18,10 +18,9 @@ class FirestoreService {
     }
   }
 
-  // Method to retrieve offline notes (e.g., from Hive or SQLite)
+  // Method to retrieve offline notes 
   Future<List<NoteModel>> _getOfflineNotes() async {
-    // Fetch notes from local storage
-    // This could be from Hive or any other local database
-    return []; // Return offline notes here
+    
+    return []; 
   }
 }

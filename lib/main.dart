@@ -42,7 +42,8 @@ void main() async {
     MultiBlocProvider(
       providers: [
         BlocProvider<NoteBloc>(
-          create: (_) => NoteBloc(noteRepository),
+          create: (_) => NoteBloc(noteRepository,
+              ConnectivityCubit(connectivityService, firestoreService)),
         ),
         BlocProvider<ConnectivityCubit>(
           create: (_) {

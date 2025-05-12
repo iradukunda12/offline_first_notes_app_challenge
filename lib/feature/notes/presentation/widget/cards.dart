@@ -5,12 +5,14 @@ import 'package:kayko_challenge/feature/notes/data/model/notes.dart';
 
 class NoteCard extends StatelessWidget {
   final NoteModel note;
+  final Widget syncStatus;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
 
   const NoteCard({
     super.key,
     required this.note,
+    required this.syncStatus,
     required this.onEdit,
     required this.onDelete,
   });
@@ -18,10 +20,9 @@ class NoteCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      // Set the card width to your preferred size
       child: Card(
         elevation: 4,
-        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(12),
@@ -52,10 +53,10 @@ class NoteCard extends StatelessWidget {
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
-                            overflow: TextOverflow.ellipsis,
+                            overflow: TextOverflow.ellipsis,  
                             maxLines: 1,
                           ),
-                          const SizedBox(height: 4),
+                          const SizedBox(height: 0),
                           Text(
                             note.description,
                             style: const TextStyle(
@@ -65,6 +66,7 @@ class NoteCard extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,
                           ),
+                          syncStatus,
                           SizedBox(
                             height: 10,
                           ),
@@ -81,7 +83,7 @@ class NoteCard extends StatelessWidget {
                                       fontSize: 14,
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold),
-                                ), // No label, icon only
+                                ),
                                 style: ElevatedButton.styleFrom(
                                   minimumSize: const Size(70, 40),
                                   padding: EdgeInsets.zero,
