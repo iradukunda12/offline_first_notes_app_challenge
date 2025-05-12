@@ -52,7 +52,7 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
         title: event.title,
         description: event.description,
         imagePath: event.imagePath,
-       
+        // Always start as pending - let repository handle sync
         syncStatus: SyncStatus.pending,
       );
 

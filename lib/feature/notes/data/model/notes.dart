@@ -1,7 +1,7 @@
 import 'package:hive_ce/hive.dart';
 import 'package:kayko_challenge/core/services/encryption.dart';
 
-enum SyncStatus { synced, pending, failed }
+enum SyncStatus { synced, pending, failed, notSynced }
 
 @HiveType(typeId: 0)
 class NoteModel extends HiveObject {

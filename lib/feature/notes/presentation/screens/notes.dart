@@ -211,6 +211,9 @@ class _HomeScreenState extends State<HomeScreen> {
         color = Colors.red;
         text = 'Failed';
         break;
+      case SyncStatus.notSynced:
+        // TODO: Handle this case.
+        throw UnimplementedError();
     }
 
     return Row(

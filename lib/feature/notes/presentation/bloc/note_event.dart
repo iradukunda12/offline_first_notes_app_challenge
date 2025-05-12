@@ -25,7 +25,7 @@ class AddNoteEvent extends NoteEvent {
 class DeleteNoteEvent extends NoteEvent {
   final String id;
 
-  DeleteNoteEvent({required this.id});
+  const DeleteNoteEvent({required this.id});
 }
 
 class UpdateNoteEvent extends NoteEvent {
@@ -45,7 +45,6 @@ class UpdateNoteEvent extends NoteEvent {
   List<Object> get props => [id, title, description];
 }
 
-// New events
 class LoadNotesEvent extends NoteEvent {}
 
 class SyncNotesEvent extends NoteEvent {}

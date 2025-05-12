@@ -6,7 +6,7 @@ import '../model/notes.dart';
 
 class NoteRepositoryImpl implements NoteRepository {
   final Box<NoteModel> noteBox;
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  late final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   NoteRepositoryImpl(this.noteBox);
 

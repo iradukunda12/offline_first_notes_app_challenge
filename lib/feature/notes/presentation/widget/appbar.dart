@@ -16,9 +16,9 @@ class AppBars extends StatelessWidget implements PreferredSizeWidget {
           title: Column(
             children: [
               Text(
-                "Kayko Challenge",
+                "Quick notes",
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 22,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
