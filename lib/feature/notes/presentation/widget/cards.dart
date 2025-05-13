@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kayko_challenge/feature/notes/data/model/notes.dart';
 
 class NoteCard extends StatelessWidget {
@@ -22,25 +23,27 @@ class NoteCard extends StatelessWidget {
     return SizedBox(
       child: Card(
         elevation: 4,
-        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0.h),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.r),
+        ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12.r),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (note.imagePath != null)
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(12.r),
                   child: Image.file(
                     File(note.imagePath!),
                     width: double.infinity,
-                    height: 100,
+                    height: 100.h,
                     fit: BoxFit.cover,
                   ),
                 ),
               Padding(
-                padding: const EdgeInsets.all(8),
+                padding: EdgeInsets.all(8.w),
                 child: Row(
                   children: [
                     Expanded(
@@ -49,73 +52,76 @@ class NoteCard extends StatelessWidget {
                         children: [
                           Text(
                             note.title,
-                            style: const TextStyle(
-                              fontSize: 16,
+                            style: TextStyle(
+                              fontSize: 16.sp,
                               fontWeight: FontWeight.bold,
                             ),
-                            overflow: TextOverflow.ellipsis,  
+                            overflow: TextOverflow.ellipsis,
                             maxLines: 1,
                           ),
-                          const SizedBox(height: 0),
+                          SizedBox(height: 0.h),
                           Text(
                             note.description,
-                            style: const TextStyle(
-                              fontSize: 12,
+                            style: TextStyle(
+                              fontSize: 12.sp,
                               color: Colors.black87,
                             ),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,
                           ),
                           syncStatus,
-                          SizedBox(
-                            height: 10,
-                          ),
+                          SizedBox(height: 10.h),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               ElevatedButton.icon(
                                 onPressed: onEdit,
-                                icon: const Icon(Icons.edit,
-                                    size: 14, color: Colors.white),
+                                icon: Icon(
+                                  Icons.edit,
+                                  size: 14.sp,
+                                  color: Colors.white,
+                                ),
                                 label: Text(
                                   "Edit",
                                   style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
+                                    fontSize: 14.sp,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                                 style: ElevatedButton.styleFrom(
-                                  minimumSize: const Size(70, 40),
+                                  minimumSize: Size(70.w, 40.h),
                                   padding: EdgeInsets.zero,
                                   backgroundColor: Colors.black87,
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(6),
+                                    borderRadius: BorderRadius.circular(6.r),
                                   ),
                                 ),
                               ),
-                              Spacer(),
+                              const Spacer(),
                               Padding(
-                                padding: const EdgeInsets.only(right: 3.0),
+                                padding: EdgeInsets.only(right: 3.w),
                                 child: ElevatedButton.icon(
                                   onPressed: onDelete,
-                                  icon: const Icon(
+                                  icon: Icon(
                                     Icons.delete,
-                                    size: 14,
+                                    size: 14.sp,
                                     color: Colors.white,
                                   ),
                                   label: Text(
                                     "Delete",
                                     style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
+                                      fontSize: 14.sp,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                   style: ElevatedButton.styleFrom(
-                                    minimumSize: const Size(70, 40),
+                                    minimumSize: Size(70.w, 40.h),
                                     padding: EdgeInsets.zero,
                                     backgroundColor: Colors.red,
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(6),
+                                      borderRadius: BorderRadius.circular(6.r),
                                     ),
                                   ),
                                 ),

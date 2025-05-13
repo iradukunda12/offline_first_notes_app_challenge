@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kayko_challenge/core/utils/image_helper.dart';
 
 class CustomBottomNav extends StatefulWidget {
@@ -12,7 +13,12 @@ class CustomBottomNav extends StatefulWidget {
   final String? initialTitle;
   final String? initialDescription;
   final String? initialImagePath;
-  const CustomBottomNav({super.key, required this.onSave, this.initialImagePath, this.initialTitle, this.initialDescription});
+  const CustomBottomNav(
+      {super.key,
+      required this.onSave,
+      this.initialImagePath,
+      this.initialTitle,
+      this.initialDescription});
 
   @override
   State<CustomBottomNav> createState() => _CustomBottomNavState();
@@ -23,7 +29,7 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
   final descriptionController = TextEditingController();
 
   File? selectedImage;
- @override
+  @override
   void initState() {
     super.initState();
 
@@ -38,7 +44,6 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
     descriptionController.text = widget.initialDescription ?? '';
   }
 
-
   Future<void> pickImage() async {
     final pickedImage = await ImageHelper.pickImageFromGallery();
     if (pickedImage != null) {
@@ -51,68 +56,72 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 30.0),
+      padding: EdgeInsets.symmetric(vertical: 40.h, horizontal: 30.w),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           if (selectedImage != null)
             CircleAvatar(
-              radius: 40,
+              radius: 40.r,
               backgroundImage: FileImage(selectedImage!),
             ),
           TextField(
             controller: textController,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               hintText: 'Title',
-              hintStyle: TextStyle(fontSize: 16, color: Colors.black54),
-              enabledBorder: UnderlineInputBorder(
+              hintStyle: TextStyle(fontSize: 16.sp, color: Colors.black54),
+              enabledBorder: const UnderlineInputBorder(
                 borderSide: BorderSide(color: Colors.black45),
               ),
-              focusedBorder: UnderlineInputBorder(
+              focusedBorder: const UnderlineInputBorder(
                 borderSide: BorderSide(color: Colors.black54),
               ),
             ),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 20.h),
           Row(
             children: [
               Expanded(
                 child: TextField(
                   controller: descriptionController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     hintText: 'Description',
-                    hintStyle: TextStyle(fontSize: 16, color: Colors.black54),
-                    enabledBorder: UnderlineInputBorder(
+                    hintStyle:
+                        TextStyle(fontSize: 16.sp, color: Colors.black54),
+                    enabledBorder: const UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.black45),
                     ),
-                    focusedBorder: UnderlineInputBorder(
+                    focusedBorder: const UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.black),
                     ),
                   ),
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12.w),
               ElevatedButton.icon(
                 onPressed: pickImage,
-                icon: const Icon(Icons.upload_file, color: Colors.white),
-                label: const Text("Upload"),
+                icon: Icon(Icons.upload_file, color: Colors.white, size: 20.sp),
+                label: Text(
+                  "Upload",
+                  style: TextStyle(fontSize: 14.sp),
+                ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black,
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 12,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16.w,
+                    vertical: 12.h,
                   ),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(12.r),
                   ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 20.h),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 50.0),
+            padding: EdgeInsets.symmetric(horizontal: 50.w),
             child: ElevatedButton(
               onPressed: () {
                 final title = textController.text.trim();
@@ -122,7 +131,8 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
                 if (title.isEmpty || description.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                        content: Text("Title and description are required")),
+                      content: Text("Title and description are required"),
+                    ),
                   );
                   return;
                 }
@@ -133,24 +143,22 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
                   imagePath: imagePath,
                 );
 
-                // Clear fields
                 textController.clear();
                 descriptionController.clear();
                 setState(() => selectedImage = null);
               },
               style: ElevatedButton.styleFrom(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 100, vertical: 12),
+                padding: EdgeInsets.symmetric(horizontal: 80.w, vertical: 12.h),
                 backgroundColor: Colors.black,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(10.r),
                 ),
               ),
-              child: const Text(
+              child: Text(
                 "Save",
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 18,
+                  fontSize: 18.sp,
                 ),
               ),
             ),
